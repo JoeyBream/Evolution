@@ -1,3 +1,5 @@
+import { generateMarbles } from './marbles.js';
+
 const canvas = document.getElementById('evolution-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -9,8 +11,12 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
-// Draw a test circle to verify canvas works
-ctx.fillStyle = '#4a9';
-ctx.beginPath();
-ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
-ctx.fill();
+const marbles = generateMarbles(canvas.width, canvas.height);
+console.log(`Generated ${marbles.length} marbles`);
+
+marbles.forEach(m => {
+  ctx.fillStyle = `hsl(${m.hue}, ${m.saturation}%, ${m.brightness}%)`;
+  ctx.beginPath();
+  ctx.arc(m.x, m.y, m.radius, 0, Math.PI * 2);
+  ctx.fill();
+});
