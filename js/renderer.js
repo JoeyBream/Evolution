@@ -34,8 +34,10 @@ export function render(ctx, state) {
   for (const m of marbles) {
     if (!m.consumed || m.parentIndex === -1) continue;
     const parent = marbles[m.parentIndex];
-    ctx.strokeStyle = `hsla(${m.hue}, ${m.saturation}%, ${Math.min(m.brightness + 10, 80)}%, 0.6)`;
-    ctx.lineWidth = ROOT_LINE_WIDTH;
+    ctx.strokeStyle = `hsla(${m.hue}, ${m.saturation}%, ${Math.min(m.brightness + 10, 80)}%, 0.55)`;
+    // Thicker near trunk, thinner at tips
+    ctx.lineWidth = Math.max(0.8, Math.min(m.radius, parent.radius) * 0.4);
+    ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(parent.x, parent.y);
     ctx.lineTo(m.x, m.y);
@@ -53,6 +55,9 @@ export function render(ctx, state) {
 
   // Draw trunk
   drawTrunk(ctx, canvasWidth);
+
+  // Subtle edge vignette for depth
+  drawVignette(ctx, canvasWidth, canvasHeight);
 
   // Draw target indicator
   drawTargetIndicator(ctx, targetHue, canvasWidth);
@@ -98,6 +103,14 @@ function drawTrunk(ctx, canvasWidth) {
     );
     ctx.stroke();
   }
+}
+
+function drawVignette(ctx, w, h) {
+  const gradient = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.3, w / 2, h / 2, Math.max(w, h) * 0.75);
+  gradient.addColorStop(0, 'rgba(250, 248, 244, 0)');
+  gradient.addColorStop(1, 'rgba(200, 190, 175, 0.12)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, w, h);
 }
 
 function drawTargetIndicator(ctx, hue, canvasWidth) {

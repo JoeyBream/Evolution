@@ -5,6 +5,18 @@ body {
   background: #faf8f4;
 }
 
+/* Subtle grain overlay for organic texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
 #evolution-canvas {
   position: fixed;
   top: 0;
@@ -22,6 +34,18 @@ body {
   left: 32px;
   z-index: 10;
   pointer-events: none;
+  animation: fadeInUp 1.2s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 #title-block h1 {
@@ -66,6 +90,7 @@ body {
   color: rgba(80, 65, 50, 0.8);
   min-width: 200px;
   transition: box-shadow 0.3s ease;
+  animation: fadeInUp 1s ease-out 0.3s both;
 }
 
 #controls:hover {
@@ -213,4 +238,28 @@ body {
   background: rgba(160, 140, 120, 0.08);
   color: rgba(80, 65, 50, 0.85);
   border-color: rgba(160, 140, 120, 0.3);
+}
+
+.control-buttons button:active {
+  transform: scale(0.96);
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 480px) {
+  #title-block {
+    top: 16px;
+    left: 16px;
+  }
+
+  #title-block h1 {
+    font-size: 1.8rem;
+  }
+
+  #controls {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+    min-width: unset;
+  }
 }
