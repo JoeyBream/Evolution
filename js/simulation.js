@@ -24,9 +24,9 @@ export class Simulation {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
 
-    this.tolerance = config.tolerance ?? 30;        // hue degrees
+    this.tolerance = config.tolerance ?? 10;        // hue degrees
     this.driftRate = config.driftRate ?? 2;          // max hue change per tick
-    this.reachDistance = config.reachDistance ?? 50;  // px from tip edge to marble edge
+    this.reachDistance = config.reachDistance ?? 40;  // px from tip edge to marble edge
     this.maxActiveTips = config.maxActiveTips ?? 10;
 
     this.targetHue = config.startHue ?? Math.random() * 360;

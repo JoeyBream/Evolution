@@ -51,4 +51,23 @@ export function initControls(callbacks) {
     controlsBody.classList.toggle('collapsed');
     toggleBtn.classList.toggle('collapsed');
   });
+
+  // Prevent buttons from capturing Space/Enter
+  playPauseBtn.addEventListener('keydown', (e) => { e.preventDefault(); });
+  resetBtn.addEventListener('keydown', (e) => { e.preventDefault(); });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      playing = !playing;
+      playPauseBtn.textContent = playing ? 'pause' : 'play';
+      callbacks.onPlayPause(playing);
+    } else if (e.code === 'Enter') {
+      e.preventDefault();
+      playing = true;
+      playPauseBtn.textContent = 'pause';
+      callbacks.onReset();
+    }
+  });
 }
