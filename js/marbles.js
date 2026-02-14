@@ -86,7 +86,7 @@ export function poissonDiskSample(width, height, minDist, k = 30) {
 export function generateMarbles(width, height, centerHue = null) {
   const minDist = 10;
   const hueCenter = centerHue ?? Math.random() * 360;
-  const hueRange = 90; // +/- 90 degrees from center
+  const hueRange = 40; // +/- 40 degrees from center
   const points = poissonDiskSample(width, height, minDist);
 
   return points.map((p, i) => {

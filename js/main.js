@@ -12,13 +12,16 @@ let speed = 10;
 let lastTick = 0;
 
 let resizeTimeout;
+let initialized = false;
 function resize() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    sim = createSimulation();
-  }, 300);
+  if (initialized) {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      sim = createSimulation();
+    }, 300);
+  }
 }
 
 function createSimulation() {
@@ -44,6 +47,7 @@ document.addEventListener('visibilitychange', () => {
 
 resize();
 sim = createSimulation();
+initialized = true;
 
 initControls({
   onSpeed: (val) => { speed = val; },
