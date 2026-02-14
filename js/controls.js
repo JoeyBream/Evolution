@@ -11,6 +11,8 @@ export function initControls(callbacks) {
   const toleranceSlider = document.getElementById('tolerance');
   const playPauseBtn = document.getElementById('play-pause');
   const resetBtn = document.getElementById('reset');
+  const toggleBtn = document.getElementById('controls-toggle');
+  const controlsBody = document.getElementById('controls-body');
 
   const speedVal = document.getElementById('speed-val');
   const driftVal = document.getElementById('drift-val');
@@ -34,13 +36,19 @@ export function initControls(callbacks) {
   let playing = true;
   playPauseBtn.addEventListener('click', () => {
     playing = !playing;
-    playPauseBtn.textContent = playing ? 'Pause' : 'Play';
+    playPauseBtn.textContent = playing ? 'pause' : 'play';
     callbacks.onPlayPause(playing);
   });
 
   resetBtn.addEventListener('click', () => {
     playing = true;
-    playPauseBtn.textContent = 'Pause';
+    playPauseBtn.textContent = 'pause';
     callbacks.onReset();
+  });
+
+  // Collapsible panel
+  toggleBtn.addEventListener('click', () => {
+    controlsBody.classList.toggle('collapsed');
+    toggleBtn.classList.toggle('collapsed');
   });
 }

@@ -22,8 +22,9 @@ function resize() {
 }
 
 function createSimulation() {
-  const marbles = generateMarbles(canvas.width, canvas.height);
-  return new Simulation(marbles, canvas.width, canvas.height);
+  const startHue = 240 + Math.random() * 60; // dark blue (240) to dark pink (300)
+  const marbles = generateMarbles(canvas.width, canvas.height, startHue);
+  return new Simulation(marbles, canvas.width, canvas.height, { startHue });
 }
 
 function loop(timestamp) {

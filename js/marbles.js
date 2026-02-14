@@ -83,19 +83,26 @@ export function poissonDiskSample(width, height, minDist, k = 30) {
  * @param {number} height - canvas height
  * @returns {Array<{x, y, radius, hue, saturation, brightness, consumed, parentIndex}>}
  */
-export function generateMarbles(width, height) {
-  const minDist = 35;
+export function generateMarbles(width, height, centerHue = null) {
+  const minDist = 10;
+  const hueCenter = centerHue ?? Math.random() * 360;
+  const hueRange = 90; // +/- 90 degrees from center
   const points = poissonDiskSample(width, height, minDist);
 
-  return points.map((p, i) => ({
-    id: i,
-    x: p.x,
-    y: p.y,
-    radius: 5 + Math.random() * 20,   // 5-25px
-    hue: Math.random() * 360,
-    saturation: 60 + Math.random() * 40, // 60-100%
-    brightness: 50 + Math.random() * 40, // 50-90%
-    consumed: false,
-    parentIndex: -1,
-  }));
+  return points.map((p, i) => {
+    let hue = hueCenter + (Math.random() - 0.5) * 2 * hueRange;
+    if (hue < 0) hue += 360;
+    if (hue >= 360) hue -= 360;
+    return {
+      id: i,
+      x: p.x,
+      y: p.y,
+      radius: 2 + Math.random() * 5,    // 2-7px
+      hue,
+      saturation: 70 + Math.random() * 20, // 70-90%
+      brightness: 55 + Math.random() * 15, // 55-70%
+      consumed: false,
+      parentIndex: -1,
+    };
+  });
 }

@@ -24,12 +24,12 @@ export class Simulation {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
 
-    this.tolerance = config.tolerance ?? 30;        // hue degrees
+    this.tolerance = config.tolerance ?? 5;         // hue degrees
     this.driftRate = config.driftRate ?? 2;          // max hue change per tick
-    this.reachDistance = config.reachDistance ?? 60;  // px from tip edge to marble edge
-    this.maxActiveTips = config.maxActiveTips ?? 5;
+    this.reachDistance = config.reachDistance ?? 50;  // px from tip edge to marble edge
+    this.maxActiveTips = config.maxActiveTips ?? 10;
 
-    this.targetHue = Math.random() * 360;
+    this.targetHue = config.startHue ?? Math.random() * 360;
     this.activeTips = [];  // indices into marbles array
     this.tickCount = 0;
 
@@ -88,22 +88,34 @@ export class Simulation {
       const nearby = this.hash.query(tip.x, tip.y, tip.radius + this.reachDistance);
       const candidates = nearby.filter(m => !m.consumed && m.id !== tipId);
 
+      // Score each candidate: prefer downward + color match
+      let bestScore = -Infinity;
+      let bestCandidate = null;
+
       for (const candidate of candidates) {
-        // Check edge-to-edge distance
         const dx = candidate.x - tip.x;
         const dy = candidate.y - tip.y;
         const centerDist = Math.sqrt(dx * dx + dy * dy);
         const edgeDist = centerDist - tip.radius - candidate.radius;
 
         if (edgeDist > this.reachDistance) continue;
+        if (hueDistance(candidate.hue, this.targetHue) > this.tolerance) continue;
 
-        // Check color match
-        if (hueDistance(candidate.hue, this.targetHue) <= this.tolerance) {
-          candidate.consumed = true;
-          candidate.parentIndex = tipId;
-          newTips.push(candidate.id);
-          grew = true;
+        // Score by downwardness: sin(angle) ranges -1 (up) to 1 (down)
+        const angle = Math.atan2(dy, dx);
+        const score = Math.sin(angle);
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestCandidate = candidate;
         }
+      }
+
+      if (bestCandidate) {
+        bestCandidate.consumed = true;
+        bestCandidate.parentIndex = tipId;
+        newTips.push(bestCandidate.id);
+        grew = true;
       }
     }
 
