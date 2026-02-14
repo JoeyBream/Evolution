@@ -24,3 +24,39 @@ body { overflow: hidden; background: #1a1a1a; }
   font-size: 13px;
   min-width: 220px;
 }
+
+.control-group {
+  margin-bottom: 10px;
+}
+
+.control-group label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.control-group input[type="range"] {
+  width: 100%;
+  cursor: pointer;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.control-buttons button {
+  flex: 1;
+  padding: 6px 12px;
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.control-buttons button:hover {
+  background: #444;
+}
