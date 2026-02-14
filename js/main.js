@@ -11,9 +11,14 @@ let playing = true;
 let speed = 10;
 let lastTick = 0;
 
+let resizeTimeout;
 function resize() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    sim = createSimulation();
+  }, 300);
 }
 
 function createSimulation() {
@@ -54,5 +59,18 @@ initControls({
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   playing = false;
 }
+
+window.EvolutionArt = {
+  init: () => { sim = createSimulation(); },
+  play: () => { playing = true; },
+  pause: () => { playing = false; },
+  reset: () => { sim = createSimulation(); playing = true; },
+  configure: (config) => {
+    if (config.speed) speed = config.speed;
+    sim.updateConfig(config);
+  },
+  hideControls: () => { document.getElementById('controls').style.display = 'none'; },
+  showControls: () => { document.getElementById('controls').style.display = 'block'; },
+};
 
 requestAnimationFrame(loop);

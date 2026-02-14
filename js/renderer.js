@@ -38,6 +38,10 @@ export function render(ctx, state) {
     ctx.stroke();
   }
 
+  // Add subtle glow to consumed marbles
+  ctx.shadowColor = 'rgba(90, 58, 26, 0.4)';
+  ctx.shadowBlur = 6;
+
   // Draw consumed marbles (on top of lines)
   for (const m of marbles) {
     if (!m.consumed) continue;
@@ -46,6 +50,10 @@ export function render(ctx, state) {
     ctx.arc(m.x, m.y, m.radius, 0, Math.PI * 2);
     ctx.fill();
   }
+
+  // Reset shadow
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
 
   // Draw trunk
   drawTrunk(ctx, canvasWidth);
