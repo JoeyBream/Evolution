@@ -1,5 +1,6 @@
 import { generateMarbles } from './marbles.js';
 import { SpatialHash } from './spatial-hash.js';
+import { render } from './renderer.js';
 
 const canvas = document.getElementById('evolution-canvas');
 const ctx = canvas.getContext('2d');
@@ -13,18 +14,19 @@ window.addEventListener('resize', resize);
 resize();
 
 const marbles = generateMarbles(canvas.width, canvas.height);
-console.log(`Generated ${marbles.length} marbles`);
-
 const hash = new SpatialHash(50, canvas.width, canvas.height);
 marbles.forEach(m => hash.insert(m));
 
-const center = marbles[0];
-const neighbors = hash.query(center.x, center.y, 60);
-console.log(`Marble at (${center.x.toFixed(0)}, ${center.y.toFixed(0)}) has ${neighbors.length} neighbors within 60px`);
+// Mark a few marbles as consumed for visual testing
+marbles[0].consumed = true;
+if (marbles.length > 1) {
+  marbles[1].consumed = true;
+  marbles[1].parentIndex = 0;
+}
 
-marbles.forEach(m => {
-  ctx.fillStyle = `hsl(${m.hue}, ${m.saturation}%, ${m.brightness}%)`;
-  ctx.beginPath();
-  ctx.arc(m.x, m.y, m.radius, 0, Math.PI * 2);
-  ctx.fill();
+render(ctx, {
+  marbles,
+  targetHue: 180,
+  canvasWidth: canvas.width,
+  canvasHeight: canvas.height,
 });
